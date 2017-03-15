@@ -7,8 +7,11 @@ const MAX_REDIRECT_COUNT = 10;
 function thip(opts, data) {
   return new Promise((resolve, reject) => {
     if (typeof opts === 'string') opts = url.parse(opts);
-    else if (typeof opts !== 'object') throw new TypeError('Options should be srting or object.');
-    else if (opts.url) Object.assign(opts, url.parse(opts.url));
+    else if (typeof opts !== 'object') return reject(new TypeError('Options should be srting or object.'));
+    else if (opts.url) {
+      Object.assign(opts, url.parse(opts.url));
+      opts.url = undefined;
+    }
 
     if (opts.followRedirect === undefined) opts.followRedirect = true;
 
@@ -17,14 +20,15 @@ function thip(opts, data) {
       res.on('data', (chunk) => body += chunk);
       res.on('end', () => {
         if (opts.followRedirect && res.headers.location) {
-          if (!opts._thip) opts._thip = { redirect: { count: 0, stack: [] } };
-          if (opts._thip.redirect.count >= MAX_REDIRECT_COUNT || opts._thip.redirect.stack.indexOf(res.headers.location) !== -1) {
-            throw new Error('Redirect loop detected.');
+          const redirectUrl = res.headers.location;
+          const redirectOpts = Object.assign({}, opts, url.parse(redirectUrl));
+          if (!redirectOpts._thip) redirectOpts._thip = { redirect: { count: 0, stack: [] } };
+          if (redirectOpts._thip.redirect.count >= MAX_REDIRECT_COUNT || redirectOpts._thip.redirect.stack.indexOf(redirectUrl) !== -1) {
+            return reject(new Error('Redirect loop detected.'));
           }
-          opts._thip.redirect.count++;
-          opts._thip.redirect.stack.push(url.format(opts));
-          opts.url = res.headers.location;
-          thip(opts, data).then(resolve).catch(reject);
+          redirectOpts._thip.redirect.count++;
+          redirectOpts._thip.redirect.stack.push(redirectUrl);
+          thip(redirectOpts, data).then(resolve).catch(reject);
         }
         else {
           res.body = body;
