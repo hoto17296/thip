@@ -1,0 +1,23 @@
+{
+  "name": "thip",
+  "version": "0.0.0",
+  "description": "Ultra-Thin, Dependency-Free, Promise-Based HTTP request client.",
+  "main": "index.js",
+  "repository": "hoto17296/thip",
+  "keywords": [
+    "http"
+  ],
+  "author": "hoto17296",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 6"
+  },
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "mocha": "^3.2.0"
+  }
+}
