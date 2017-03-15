@@ -1,6 +1,6 @@
 {
   "name": "thip",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ultra-Thin, Dependency-Free, Promise-Based HTTP request client.",
   "main": "index.js",
   "repository": "hoto17296/thip",
