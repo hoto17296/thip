@@ -1,4 +1,6 @@
 # thip
+[![Build Status](https://travis-ci.org/hoto17296/thip.svg)](https://travis-ci.org/hoto17296/thip)
+
 Ultra-Thin, Dependency-Free, Promise-Based HTTP request client.
 
 ## Features
