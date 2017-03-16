@@ -3,8 +3,6 @@ const https = require('https');
 const url = require('url');
 const querystring = require('querystring');
 
-const MAX_REDIRECT_COUNT = 10;
-
 function parseOpts(opts) {
   if (typeof opts === 'string') opts = { url: opts };
   if (typeof opts !== 'object') throw new TypeError('Options should be srting or object.');
@@ -19,6 +17,7 @@ function thip(opts, data) {
   return new Promise((resolve, reject) => {
     opts = parseOpts(opts);
     if (opts.followRedirect === undefined) opts.followRedirect = true;
+    if (opts.maxRedirects === undefined) opts.maxRedirects = 10;
 
     const req = (opts.protocol === 'https:' ? https : http).request(opts, (res) => {
       let body = '';
@@ -28,7 +27,7 @@ function thip(opts, data) {
           const redirectUrl = res.headers.location;
           const redirectOpts = Object.assign({}, opts, url.parse(redirectUrl));
           if (!redirectOpts._thip) redirectOpts._thip = { redirect: { count: 0, stack: [] } };
-          if (redirectOpts._thip.redirect.count >= MAX_REDIRECT_COUNT || redirectOpts._thip.redirect.stack.indexOf(redirectUrl) !== -1) {
+          if (redirectOpts._thip.redirect.count >= opts.maxRedirects || redirectOpts._thip.redirect.stack.indexOf(redirectUrl) !== -1) {
             return reject(new Error('Redirect loop detected.'));
           }
           redirectOpts._thip.redirect.count++;

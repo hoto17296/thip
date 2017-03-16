@@ -21,6 +21,7 @@ npm install thip
 - `options` \<object\>|\<string\> - Any options not included below will be passed to [http.request(options)][http.request].
   - `url` \<string\> - If you specified this option, parse the url and merged to other options.
   - `followRedirect` \<boolean\> - Follow HTTP 3xx responses as redirects. Defaults to `true`.
+  - `maxRedirects` \<number\> - The maximum number of redirects to follow. Defaults to `10`.
 - data \<string\>|\<buffer\> - This will be passed to [request.write(chunk)][request.write].
 
 [http.request]: https://nodejs.org/api/http.html#http_http_request_options_callback
