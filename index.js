@@ -1,6 +1,7 @@
 const http = require('http');
 const https = require('https');
 const url = require('url');
+const querystring = require('querystring');
 
 const MAX_REDIRECT_COUNT = 10;
 
@@ -45,5 +46,28 @@ function thip(opts, data) {
     req.end();
   });
 }
+
+thip.get = function(opts, data) {
+  opts = parseOpts(opts);
+  if (!opts.method) opts.method = 'GET';
+  if (typeof data === 'object') {
+    opts.query = Object.assign({}, querystring.parse(opts.query), data);
+    delete opts.search;
+    opts.url = url.format(opts);
+  }
+  return thip(opts);
+};
+
+thip.post = function(opts, data) {
+  opts = parseOpts(opts);
+  if (!opts.method) opts.method = 'POST';
+  if (typeof data === 'object') {
+    data = querystring.stringify(data);
+    if (!opts.headers) opts.headers = {};
+    opts.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    opts.headers['Content-Length'] = Buffer.byteLength(data);
+  }
+  return thip(opts, data);
+};
 
 module.exports = thip;

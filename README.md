@@ -60,3 +60,49 @@ thip(options, data).then((res) => {
   console.log('Post successful!');
 });
 ```
+
+### thip.get(options[, data])
+- `options.method` assigns `"GET"` by default.
+- If `data` is \<object\>, the data is encoded as URL query.
+
+``` js
+thip.get('http://example.com/', { foo: 'bar' });
+```
+
+This is same as below.
+
+``` js
+thip('http://example.com/?foo=bar');
+```
+
+### thip.post(options[, data])
+- `options.method` assigns `"POST"` by default.
+- If `data` is \<object\>, the data is encoded as `x-www-form-urlencoded`.
+
+``` js
+const thip = require('thip');
+
+thip.post('http://example.com/', { foo: 'bar' });
+```
+
+This is same as below.
+
+``` js
+const thip = require('thip');
+const querystring = require('querystring');
+
+const data = querystring.stringify({
+  'foo': 'bar',
+});
+
+const options = {
+  method: 'POST',
+  url: 'http://example.com/',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': Buffer.byteLength(data),
+  },
+};
+
+thip(options, data);
+```

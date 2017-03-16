@@ -59,4 +59,26 @@ describe('thip', () => {
     });
   });
 
+  describe('thip.get', () => {
+    context('when data is specified as object', () => {
+      it('should be sent as query params', () => {
+        nock('http://example.com').get('/').query({ foo: 'foo', bar: 'bar' }).reply(200, 'ok');
+        return thip.get('http://example.com/?foo=foo', { bar: 'bar' }).then((res) => {
+          assert.equal(res.body, 'ok');
+        });
+      });
+    });
+  });
+
+  describe('thip.post', () => {
+    context('when data is specified as object', () => {
+      it('should be sent as x-www-form-urlencoded', () => {
+        nock('http://example.com').post('/', { foo: 'bar' }).reply(200, 'ok');
+        return thip.post('http://example.com/', { foo: 'bar' }).then((res) => {
+          assert.equal(res.body, 'ok');
+        });
+      });
+    });
+  });
+
 });
