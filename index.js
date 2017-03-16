@@ -4,15 +4,19 @@ const url = require('url');
 
 const MAX_REDIRECT_COUNT = 10;
 
+function parseOpts(opts) {
+  if (typeof opts === 'string') opts = { url: opts };
+  if (typeof opts !== 'object') throw new TypeError('Options should be srting or object.');
+  if (opts.url) {
+    opts = Object.assign({}, opts, url.parse(opts.url));
+    delete opts.url;
+  }
+  return opts;
+}
+
 function thip(opts, data) {
   return new Promise((resolve, reject) => {
-    if (typeof opts === 'string') opts = url.parse(opts);
-    else if (typeof opts !== 'object') return reject(new TypeError('Options should be srting or object.'));
-    else if (opts.url) {
-      Object.assign(opts, url.parse(opts.url));
-      opts.url = undefined;
-    }
-
+    opts = parseOpts(opts);
     if (opts.followRedirect === undefined) opts.followRedirect = true;
 
     const req = (opts.protocol === 'https:' ? https : http).request(opts, (res) => {

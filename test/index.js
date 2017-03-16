@@ -14,6 +14,14 @@ describe('thip', () => {
     });
   });
 
+  context('when invalid option is specified', () => {
+    it('should throw error', () => {
+      return thip(1).catch((err) => {
+        assert.equal(err.message, 'Options should be srting or object.');
+      });
+    });
+  });
+
   context('when post data is specified', () => {
     it('should send post data', () => {
       nock('http://example.com').post('/', { foo: 'bar' }).reply(200, 'ok');
