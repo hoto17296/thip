@@ -107,3 +107,13 @@ const options = {
 
 thip(options, data);
 ```
+
+## Error Handling
+If HTTP response status code is 4xx or 5xx, the promise is rejected with HttpClientError or HttpServerError.
+
+``` js
+thip('http://example.com/not_found_path').catch((error, res) => {
+  console.log(error.name); // "HttpClientError"
+  console.log(res.statusCode); // 404
+})
+```
