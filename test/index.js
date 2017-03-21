@@ -59,26 +59,6 @@ describe('thip', () => {
     });
   });
 
-  context('when client error occured', () => {
-    it('should throws HttpClientError', () => {
-      nock('http://example.com').get('/').reply(404, 'Not Found');
-      return thip('http://example.com/').then(() => assert(false)).catch((err) => {
-        assert.equal(err.name, 'HttpClientError');
-        assert.equal(err.message, 'Not Found');
-      });
-    });
-  });
-
-  context('when server error occured', () => {
-    it('should throws HttpServerError', () => {
-      nock('http://example.com').get('/').reply(503, 'Service Unavailable');
-      return thip('http://example.com/').then(() => assert(false)).catch((err) => {
-        assert.equal(err.name, 'HttpServerError');
-        assert.equal(err.message, 'Service Unavailable');
-      });
-    });
-  });
-
   describe('thip.get', () => {
     context('when data is specified as object', () => {
       it('should be sent as query params', () => {

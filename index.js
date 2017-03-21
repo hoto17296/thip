@@ -3,22 +3,6 @@ const https = require('https');
 const url = require('url');
 const querystring = require('querystring');
 
-class HttpClientError extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-    this.name = 'HttpClientError';
-  }
-}
-
-class HttpServerError extends Error {
-  constructor(message) {
-    super(message);
-    this.message = message;
-    this.name = 'HttpServerError';
-  }
-}
-
 function parseOpts(opts) {
   if (typeof opts === 'string') opts = { url: opts };
   if (typeof opts !== 'object') throw new TypeError('Options should be srting or object.');
@@ -52,11 +36,7 @@ function thip(opts, data) {
         }
         else {
           res.body = body;
-          switch (~~(res.statusCode / 100)) {
-            case 4: return reject(new HttpClientError(res.body), res);
-            case 5: return reject(new HttpServerError(res.body), res);
-            default: resolve(res);
-          }
+          resolve(res);
         }
       });
     });
